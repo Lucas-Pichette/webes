@@ -7,19 +7,23 @@ import (
 	"webes/lib"
 )
 
-type determineFunction func(string)
-
+// The structure of a command that the user can execute.
 type Command struct {
 	function    func()
 	description string
 }
 
+// The global commands-map that is filled in upon webes launch w/
+// runCommandInitializtion().
 var commands = make(map[string]Command)
 
 func main() {
 	commandHandler()
 }
 
+/* */
+/* === WEBES COMMANDS === */
+/* */
 // Initializes a new webes project
 // Callable via `webes init`
 func webes_init() {
@@ -55,60 +59,22 @@ func webes_help() {
 	}
 }
 
-func makeProjectTree() {
-	var paths = [7]string{"dist/imgs", "dist/scripts", "dist/styles", "dist/pages", "dev/imgs", "dev/pages", "dev/components"}
-	for _, path := range paths {
-		err := os.MkdirAll(path, 0755)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	type fileT struct {
-		path    string
-		name    string
-		content string
-	}
-	var files = [2]fileT{
-		{
-			path: "dist/",
-			name: "index.html",
-			content: "<!DOCTYPE HTML>\n<html lang='en-us'>" +
-				"</html>\n<head>\n	<title></title>\n	<!--Metadata-->\n" +
-				"	<meta charset='UTF-8'>\n	<meta name='viewport' content='width=device-width, initial-scale=1'>\n" +
-				"	<meta name=robots content='index,follow'>\n	<meta name='description' content='!WEBSITE_DESCRIPTION'>\n" +
-				"	<meta name='keywords' content='!RELEVANT_KEYWORDS'>\n	<meta name='author' content='!AUTHOR_NAME'>\n" +
-				"	<meta rel='canonical' href='!YOUR_URL'>\n	<meta name='subject' content='!WEBSITE_SUBJECT'>\n" +
-				"	<meta name='url' content='!YOUR_URL'>\n	<meta http-equiv='Expires' content='0'>\n" +
-				"	<meta http-equiv='imagetoolbar' content='no'>\n\n	<!--Twitter Card Specs-->\n" +
-				"	<meta name='twitter:card' content='summary'>\n	<meta name='twitter:site' content='@!YOUR_TWITTER_HANDLE'>\n" +
-				"	<meta name='twitter:title' content='!YOUR_TITLE'>\n	<meta name='twitter:description' content='!YOUR_DESCRIPTION'>\n" +
-				"	<meta name='twitter:image' content='!PATH_FOR_DISPLAY_IMAGE'>\n\n	<!--Open Graph Specs-->\n" +
-				"	<meta property='og:title' content='!YOUR_TITLE'/>\n	<meta property='og:type' content='article'/>\n	<meta property='og:url' content='!YOUR_URL'/>\n" +
-				"	<meta property='og:image' content='!PATH_FOR_DISPLAY_IMAGE'/>\n	<meta property='og:description' content='!YOUR_DESCRIPTION'/>\n" +
-				"	<meta property='og:site_name' content='!YOUR_WEBSITE_NAME'/>\n\n	<!--Dependencies-->\n" +
-				"	<link rel='stylesheet' href='!LINK_TO_YOUR_STYLESHEET'>\n</head>\n<body>\n	\n</body>\n</html>",
-		},
-		{
-			path: "dev/",
-			name: "app.go",
-			content: "package dev\n\nimport \"fmt\"\n\nfunc app(){\n	fmt.Println(\"Hello, Webes!\")\n}\n",
-		},
-	}
-	for _, file := range files {
-		fileData := []byte(file.content)
-		err := os.WriteFile(file.path+file.name, fileData, 0644)
-		if err != nil {
-			panic(err)
-		}
-	}
-}
-
+/* */
+/* === Main-Level Functions === */
+/* */
 func commandHandler() {
+	// Store the commandline arguments in a usable format
 	args := os.Args[1:]
+
+	// Initialize Commands
 	runCommandInitializtion()
 
+	// Determine if user forgot to specify a webes-command
+	// (i.e. user entered `webes` as opposed to `webes init`)
 	if len(args) == 0 {
+		// If the user did forget to specify a webes-command,
+		// then inform them that they did this, and provide
+		// a list of options they could use, and exit the driver.
 		lib.FmtPrint("Command not specified", "error")
 		webes_help()
 		return
@@ -116,6 +82,8 @@ func commandHandler() {
 
 	var webes_command string = args[0]
 
+	// It's useful to provide confirmation to the user, even if they don't
+	// need it 99% of the time.
 	lib.FmtPrint("Running `"+webes_command+"`...", "info")
 
 	if val, ok := commands[webes_command]; ok {
@@ -127,7 +95,83 @@ func commandHandler() {
 	}
 }
 
-// Function automatically ran during webes launch
+/* */
+/* === Sub-Main-Level Functions === */
+/* */
+func makeProjectTree() {
+	// Store all of the paths we want to create in the PWD that the command
+	// `webes init` is called in.
+	var paths = [7]string{
+		"dist/imgs", "dist/scripts", "dist/styles",
+		"dist/pages", "dev/imgs", "dev/pages", "dev/components",
+	}
+
+	// For each specified path, attempt to create the full directory path,
+	// and if there's an error, panic.
+	for _, path := range paths {
+		err := os.MkdirAll(path, 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// The basic structure of a file-to-be-created.
+	type fileT struct {
+		path    string
+		name    string
+		content string
+	}
+	// Store all of the files that we want to create in the PWD
+	var files = [2]fileT{
+		{
+			path: "dist/",
+			name: "index.html",
+			content: "<!DOCTYPE HTML>\n<html lang='en-us'>" +
+				"</html>\n<head>\n	<title></title>\n	<!--Metadata-->\n	<" +
+				"meta charset='UTF-8'>\n	<meta name='viewport' content='wi" +
+				"dth=device-width, initial-scale=1'>\n	<meta name=robots con" +
+				"tent='index,follow'>\n	<meta name='description' content='!WE" +
+				"BSITE_DESCRIPTION'>\n	<meta name='keywords' content='!RELEV" +
+				"ANT_KEYWORDS'>\n	<meta name='author' content='!AUTHOR_NAME" +
+				"'>\n	<meta rel='canonical' href='!YOUR_URL'>\n	<meta nam" +
+				"e='subject' content='!WEBSITE_SUBJECT'>\n	<meta name='url' " +
+				"content='!YOUR_URL'>\n	<meta http-equiv='Expires' content='0" +
+				"'>\n	<meta http-equiv='imagetoolbar' content='no'>\n\n	<" +
+				"!--Twitter Card Specs-->\n	<meta name='twitter:card' content" +
+				"='summary'>\n	<meta name='twitter:site' content='@!YOUR_TWI" +
+				"TTER_HANDLE'>\n	<meta name='twitter:title' content='!YOUR" +
+				"_TITLE'>\n	<meta name='twitter:description' content='!YOUR_D" +
+				"ESCRIPTION'>\n	<meta name='twitter:image' content='!PATH_FOR" +
+				"_DISPLAY_IMAGE'>\n\n	<!--Open Graph Specs-->\n	<meta pro" +
+				"perty='og:title' content='!YOUR_TITLE'/>\n	<meta property='o" +
+				"g:type' content='article'/>\n	<meta property='og:url' conte" +
+				"nt='!YOUR_URL'/>\n	<meta property='og:image' content='!PATH_" +
+				"FOR_DISPLAY_IMAGE'/>\n	<meta property='og:description' conte" +
+				"nt='!YOUR_DESCRIPTION'/>\n	<meta property='og:site_name' con" +
+				"tent='!YOUR_WEBSITE_NAME'/>\n\n	<!--Dependencies-->\n	<" +
+				"link rel='stylesheet' href='!LINK_TO_YOUR_STYLESHEET'>\n</he" +
+				"ad>\n<body>\n	\n</body>\n</html>",
+		},
+		{
+			path: "dev/",
+			name: "app.go",
+			content: "package dev\n\nimport \"fmt\"\n\nfunc app(){\n	" +
+				"fmt.Println(\"Hello, Webes!\")\n}\n",
+		},
+	}
+	// For each file to be created, attempt to create said file with the
+	// specified file data. If there's an error in this process, panic.
+	for _, file := range files {
+		fileData := []byte(file.content)
+		err := os.WriteFile(file.path+file.name, fileData, 0644)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
+// Function automatically ran during webes launch that ensures the
+// commands map contains all of the commands that the user can execute.
 func runCommandInitializtion() {
 	commands["init"] = Command{
 		function:    webes_init,
