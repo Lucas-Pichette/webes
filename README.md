@@ -1,4 +1,6 @@
 # webes
+_v0.0.23_  
+  
 **WEB**site **E**nvironment **S**ervice: Make websites in less time with Golang  
   
 A website-development framework that **doesn't** hurt your SEO. All while 
@@ -86,7 +88,9 @@ the index.html file in the dist/ directory.
 ## Installation
 Pre-Requisite: You must be in the directory you would like webes installed to.
 Download via Git (assumes shell's PWD is in desired location for webes):  
-`git clone https://github.com/Lucas-Pichette/webes.git`  
+```bash
+git clone https://github.com/Lucas-Pichette/webes.git
+```  
 
 [comment]: <> (TODO: Add Installers for Each System)
 <br /> <br /> 
@@ -100,7 +104,9 @@ executable, for any commands:
 Run `go run main.go` in replacement of `webes`.  
   
 To initialize/create a new project run:  
-`webes init`  
+```bash
+webes init
+```  
   
 The above command will create a directory tree that looks like:  
 pwd  
