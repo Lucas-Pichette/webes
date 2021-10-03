@@ -30,17 +30,18 @@ func webes_init() {
 	lib.FmtPrint("initializing Project", "header", "info")
 	const projectTree string = "" +
 		"<pwd>\n" +
-		"	┗━ dist/\n" +
+		"	┣━ dist/\n" +
 		"		┣━ imgs/\n" +
+		"		┣━ pages/\n" +
 		"		┣━ scripts/\n" +
 		"		┣━ styles/\n" +
-		"		┣━ pages/\n" +
 		"		┗━ index.html\n" +
 		"	┗━ dev/\n" +
+		"		┣━ components/\n" +
 		"		┣━ imgs/\n" +
 		"		┣━ pages/\n" +
-		"		┣━ components/\n" +
-		"		┗━ app.go"
+		"		┣━ scripts/\n" +
+		"		┗━ styles/\n"
 
 	makeProjectTree()
 
@@ -57,6 +58,14 @@ func webes_help() {
 	for name, cmd := range commands {
 		lib.FmtPrint(name+": "+cmd.description, "info")
 	}
+}
+
+// Runs through dev/ directory and sub-directory validating HTML, CSS, and JS
+// files to ensure that nothing exists that is not being used. Skips over
+// comments.
+// webes_validate automatically called when going to `webes build`.
+func webes_validate() {
+
 }
 
 /* */
@@ -101,9 +110,9 @@ func commandHandler() {
 func makeProjectTree() {
 	// Store all of the paths we want to create in the PWD that the command
 	// `webes init` is called in.
-	var paths = [7]string{
-		"dist/imgs", "dist/scripts", "dist/styles",
-		"dist/pages", "dev/imgs", "dev/pages", "dev/components",
+	var paths = [9]string{
+		"dist/imgs", "dist/scripts", "dist/styles", "dist/pages", "dev/imgs",
+		"dev/pages", "dev/components", "dev/styles", "dev/scripts",
 	}
 
 	// For each specified path, attempt to create the full directory path,
@@ -122,7 +131,7 @@ func makeProjectTree() {
 		content string
 	}
 	// Store all of the files that we want to create in the PWD
-	var files = [2]fileT{
+	var files = [4]fileT{
 		{
 			path: "dist/",
 			name: "index.html",
@@ -149,14 +158,29 @@ func makeProjectTree() {
 				"FOR_DISPLAY_IMAGE'/>\n	<meta property='og:description' conte" +
 				"nt='!YOUR_DESCRIPTION'/>\n	<meta property='og:site_name' con" +
 				"tent='!YOUR_WEBSITE_NAME'/>\n\n	<!--Dependencies-->\n	<" +
-				"link rel='stylesheet' href='!LINK_TO_YOUR_STYLESHEET'>\n</he" +
-				"ad>\n<body>\n	\n</body>\n</html>",
+				"link rel='stylesheet' href='styles/style.css'>\n</head>\n<bo" +
+				"dy>\n	\n<!--Non-Critical Dependencies-->\n	<script langu" +
+				"age=\"javascript\" type=\"text/javascript\" src=\"scripts/sc" +
+				"ript.js\"></script>\n</body>\n</html>",
 		},
 		{
-			path: "dev/",
-			name: "app.go",
-			content: "package dev\n\nimport \"fmt\"\n\nfunc app(){\n	" +
-				"fmt.Println(\"Hello, Webes!\")\n}\n",
+			path: "dev/styles/",
+			name: "style.css",
+			content: "html,body {\n	margin:0;\n	background-color:#333;\n	" +
+				"color:white;\n}\n",
+		},
+		{
+			path: "dev/components/",
+			name: "_helloWorld.webes",
+			content: "<template>\n	<div class='_helloWorld'>\n		<h1>" +
+				"Hello, World!</h1>\n	</div>\n</template>\n\n\n<style>\n" +
+				"	h1 {\n		font-size:250%;\n	}\n</style>\n\n\n" +
+				"<script>\n	\n</script>\n",
+		},
+		{
+			path:    "dev/scripts/",
+			name:    "script.js",
+			content: "console.log('Hello World!');\n",
 		},
 	}
 	// For each file to be created, attempt to create said file with the
