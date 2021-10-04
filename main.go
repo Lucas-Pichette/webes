@@ -1,10 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"fmt"       // Used for printing
+	"io/ioutil" // Used for reading files and directories
+	"os"        // Used for creating files and directories
+	"strings"   // Used for string manipulation
 
-	"webes/lib"
+	"webes/lib" // Used for various utility functions specific to webes
 )
 
 // The structure of a command that the user can execute.
@@ -65,7 +67,94 @@ func webes_help() {
 // comments.
 // webes_validate automatically called when going to `webes build`.
 func webes_validate() {
+	// 1) Scan through component files (*.webes)
+	files, err := ioutil.ReadDir("dev/components")
+	if err != nil {
+		lib.FmtPrint(err.Error(), "error")
+		panic(err.Error())
+	}
 
+	for _, f := range files {
+		if f.IsDir() {
+			fmt.Println("dev/components/" + f.Name())
+
+			// Inform the user that at the moment they shouldn't have components
+			// in sub-directories of dev/components/. That's a TODO for later.
+			lib.FmtPrint("Directory within dev/components found with name: \""+
+				f.Name()+"\", please ensure that you have all components in "+
+				"dev/components, as opposed to nested within a sub-directory"+
+				" within dev/components", "warning")
+		} else {
+			fmt.Println("dev/components/" + f.Name() + "/")
+
+			var fileExtension = strings.SplitAfter(f.Name(), ".")[1]
+			// Start the parsing if it's not a directory, and has *.webes format
+			if fileExtension == "webes" {
+				const maxFileSize int = 99999
+				var fileData = make([]byte, maxFileSize)
+
+				file, err := os.Open("dev/components/" + f.Name())
+				if err != nil {
+					panic(err)
+				} else {
+					length, err := file.Read(fileData)
+					if err != nil {
+						panic(err)
+					} else {
+						fmt.Printf("%d bytes: %s\n", length,
+							string(fileData[:length]))
+					}
+				}
+			}
+		}
+	}
+	//	1.a) Scan through content between <template> and </template>, and
+	//		store all:
+	//		1.a.i)   class names
+	//		1.a.ii)  ids
+	//		1.a.iii) html tags
+	//		1.a.iv)  JS function names.
+	//	1.b) Scan through content between <style> and </style>, and store all:
+	//		1.b.i)   class names
+	//		1.b.ii)  ids
+	//		1.b.iii) html tags.
+	//	1.c) Scan through content between <script> and </script>, and store all:
+	//		1.c.i) function names.
+	// 	1.d) Cross-compare what's used (collected from <template>...) with
+	//			what exists (collected from <style>... and <script>...)
+}
+
+func webes_wipe() {
+	var userInput string
+
+	var confirmationMessage string = "By entering (yes/y) you confirm " +
+		"that you want your webes project to be deleted. Otherwise, enter " +
+		"(no/n). " + lib.Style("underline", "This is an irreversible action.") +
+		lib.Style("red", lib.Style("bold", " Are you sure that you want to "+
+			"permanently delete this webes project: "))
+	confirmationMessage = lib.Fmt(confirmationMessage, "critical")
+
+	// confirm with the user that they want to wipe the project
+	fmt.Print(confirmationMessage)
+	fmt.Scanln(&userInput)
+
+	// if the user didn't enter an acceptable input, reprompt them until they do
+	for strings.ToLower(userInput)[0] != 121 && // 121 == 'y'
+		strings.ToLower(userInput)[0] != 110 { // 110 == 'n'
+		fmt.Print(confirmationMessage)
+		fmt.Scanln(&userInput)
+	}
+
+	if strings.ToLower(userInput)[0] == 121 {
+		var pathToRemove = []string{"dev/", "dist/", "index.html"}
+
+		for _, path := range pathToRemove {
+			err := os.RemoveAll(path)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 }
 
 /* */
@@ -174,7 +263,8 @@ func makeProjectTree() {
 			name: "_helloWorld.webes",
 			content: "<template>\n	<div class='_helloWorld'>\n		<h1>" +
 				"Hello, World!</h1>\n	</div>\n</template>\n\n\n<style>\n" +
-				"	h1 {\n		font-size:250%;\n	}\n</style>\n\n\n" +
+				"	h1 {\n		font-size:250%;\n	}\n	.unusedStyle {\n	" +
+				"	color:red;\n}\n</style>\n\n\n" +
 				"<script>\n	\n</script>\n",
 		},
 		{
@@ -204,5 +294,13 @@ func runCommandInitializtion() {
 	commands["help"] = Command{
 		function:    webes_help,
 		description: "Provides details about the various webes commands",
+	}
+	commands["validate"] = Command{
+		function:    webes_validate,
+		description: "Deletes the webes project that exists within the PWD.",
+	}
+	commands["wipe"] = Command{
+		function:    webes_wipe,
+		description: "Deletes",
 	}
 }

@@ -2,44 +2,60 @@ package lib
 
 import "fmt"
 
+func criticalMsg(message string) string {
+	return Style("bold", Style("red", "(!!) "+message))
+}
+
 // Display text in red and with an alert message-type specifier-text.
 func errMsg(messagePieces ...string) string {
 	var message string = "(!) "
 	for _, messagePiece := range messagePieces {
 		message += messagePiece + " "
 	}
-	// Color is visible in colors.go, due to colors.go being in the
+	// Style is visible in Styles.go, due to Styles.go being in the
 	// same directory (lib) as this file (msgs.go), we're able to
 	// access its exported files.
-	return Color("r", message)
+	return Style("r", message)
+}
+
+func warningMsg(message string) string {
+	return Style("yellow", "(~) "+message)
 }
 
 func infoMsg(message string) string {
-	return Color("gray", "(i) "+message)
+	return Style("gray", "(i) "+message)
 }
 
 func FmtPrint(message string, fmtTypes ...string) {
-	var formatSpecified bool = false
+	// Print the now completely formatted message
+	for _, fmtType := range fmtTypes {
+		fmt.Println(Fmt(message, fmtType))
+	}
+}
+
+func Fmt(message string, fmtType string) string {
+	var formatSpecified bool = true
 
 	// Run everything that changes the message itself
-	for _, fmtType := range fmtTypes {
-		switch fmtType {
-		case "header", "head", "title":
-			message = "== " + message + " =="
-			formatSpecified = true
-		}
+	switch fmtType {
+	case "header", "head", "title":
+		message = "== " + message + " =="
+	default:
+		formatSpecified = false
 	}
 
-	// Run the message-type specifier-text and coloring.
-	for _, fmtType := range fmtTypes {
-		switch fmtType {
-		case "error", "err", "e":
-			message = errMsg(message)
-			formatSpecified = true
-		case "info", "i":
-			message = infoMsg(message)
-			formatSpecified = true
-		}
+	// Run the message-type specifier-text and Styleing.
+	switch fmtType {
+	case "critical", "c":
+		message = criticalMsg(message)
+	case "error", "err", "e":
+		message = errMsg(message)
+	case "warning", "w":
+		message = warningMsg(message)
+	case "info", "i":
+		message = infoMsg(message)
+	default:
+		formatSpecified = false
 	}
 
 	// If there wasn't ever a fmt case that was met,
@@ -47,24 +63,6 @@ func FmtPrint(message string, fmtTypes ...string) {
 	// incorrectly.
 	if !formatSpecified {
 		errMsg("Incorrect fmtType specified")
-		return
 	}
-
-	// Print the now completely formatted message
-	fmt.Println(message)
-}
-
-func Fmt(message string, fmtTypes ...string) string {
-	for _, fmtType := range fmtTypes {
-		switch fmtType {
-		case "error", "err", "e":
-			return errMsg(message)
-		case "info", "i":
-			return infoMsg(message)
-		case "header", "head", "title":
-			return "== " + message + " =="
-		}
-	}
-	errMsg("Incorrect fmtType specified")
 	return message
 }

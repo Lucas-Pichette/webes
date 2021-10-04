@@ -12,9 +12,13 @@ var Cyan string = "\033[36m"
 var Gray string = "\033[37m"
 var White string = "\033[97m"
 
+var Bold string = "\u001b[1m"
+var Underline string = "\u001b[4m"
+var SpecialReset string = "\u001b[0m"
+
 // Capitalized functions are exportable
-func Color(color string, text string) string {
-	switch color {
+func Style(style string, text string) string {
+	switch style {
 	case "red", "r":
 		return red(text)
 	case "green", "g":
@@ -31,6 +35,10 @@ func Color(color string, text string) string {
 		return gray(text)
 	case "white", "w":
 		return white(text)
+	case "bold":
+		return bold(text)
+	case "underline":
+		return underline(text)
 	}
 	fmt.Println("Color not found, choose one of:\n" +
 		"red, green, yellow, blue, purple, cyan, " +
@@ -68,4 +76,12 @@ func gray(text string) string {
 
 func white(text string) string {
 	return Red + text + Reset
+}
+
+func bold(text string) string {
+	return Bold + text + SpecialReset
+}
+
+func underline(text string) string {
+	return Underline + text + SpecialReset
 }

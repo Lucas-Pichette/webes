@@ -1,5 +1,5 @@
 # webes
-_v0.0.23_  
+_v0.0.3_  
   
 **WEB**site **E**nvironment **S**ervice: Make websites in less time with Golang  
   
@@ -124,6 +124,19 @@ pwd
 <br /> <br /> 
 
 ## Versions
+  
+v0.0.3: Baby Steps
+* Updated lib/colors.go:
+  * Changed Color() function name to Style()
+  * Added style options "bold" and "underline" to Style() function
+* Updated lib/msgs.go:
+  * Added criticalMsg(), which makes use of new "bold" style option
+  * Refactored Fmt and FmtPrint
+* Updated main.go:
+  * Added support for two new commands:
+    * `wipe`: Deletes the webes project that exists within the PWD.
+    * `validate` (WIP): Checks dev/ for unused assets/code-segments.
+  
   
 v0.0.2: Webes Foundations  
 * Created lib/ directory: Intended use is to hold Golang files, each file 
