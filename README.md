@@ -1,5 +1,7 @@
 # webes
-_v0.0.43_  
+_v0.0.44_  
+
+[comment]: <> (go build -o webes;git add *;git commit -m ")
   
 **WEB**site **E**nvironment **S**ervice: Make websites in less time with Golang  
   
