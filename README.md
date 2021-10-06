@@ -1,5 +1,5 @@
 # webes
-_v0.0.41_  
+_v0.0.42_  
   
 **WEB**site **E**nvironment **S**ervice: Make websites in less time with Golang  
   
@@ -51,7 +51,7 @@ pwd
 &emsp;&emsp;┣━ imgs/  
 &emsp;&emsp;┣━ pages/  
 &emsp;&emsp;┣━ scripts/  
-&emsp;&emsp;&emsp;┗━ scipt.js  
+&emsp;&emsp;&emsp;┗━ script.js  
 &emsp;&emsp;┗━ styles/  
 &emsp;&emsp;&emsp;┗━ style.css  
 
