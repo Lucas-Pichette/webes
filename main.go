@@ -268,11 +268,10 @@ func webes_wipe() {
 	lib.FmtPrint("FOR THIS COMMAND TO WORK YOU MUST BE IN THE ROOT OF YOUR "+
 		"PROJECT (same directory as dev/ and dist/).", "warning")
 
-	var confirmationMessage string = "By entering (yes/y) you confirm " +
-		"that you want your webes project to be deleted. Otherwise, enter " +
-		"(no/n). " + lib.Style("underline", "This is an irreversible action.") +
+	var confirmationMessage string = lib.Style("underline", "This is an "+
+		"irreversible action.") +
 		lib.Style("red", lib.Style("bold", " Are you sure that you want to "+
-			"permanently delete this webes project: "))
+			"permanently delete this webes project (yes/no): "))
 	confirmationMessage = lib.Fmt(confirmationMessage, "critical")
 
 	// confirm with the user that they want to wipe the project
