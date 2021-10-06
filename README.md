@@ -9,81 +9,11 @@ allowing you to use your favorite features of a typical framework:
   * Scoped styles and scripts
 * Unused code and file cleanup upon project build
   
-**TL;DR Webes cleans your environment upon `webes build` so that your website 
-is lightning fast and SEO-efficient.**  
+**TL;DR Webes cleans your environment upon `webes build` so that your website is lightning fast and SEO-efficient.**  
   
-<details>
-<summary>The best way to explain it is with an example:</summary>  
-<br />
-  
-> _dev/_**Index.html**  
-> ...  
-> &lt;div class="my-unused-class"&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;&lt;_myComponent class="lg-2" contentVar=": )"&gt;
-> Hello, Webes!&lt;/_myComponent&gt;  
-> &lt;/div&gt;  
-> ...  
-> <br /> <br /> 
-> _dev/components/_**_myComponent.webes**  
-> &lt;template&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="_myComponent"&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h3&gt;{ innerText }
-> &lt;/h3&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;button&gt;{ contentVar }
-> &lt;/button&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;   
-> &lt;/template&gt;  
->   
-> &lt;style&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;p {  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color:blue;  
-> &nbsp;&nbsp;&nbsp;&nbsp;}  
-> &lt;/style&gt;  
->   
-> &lt;script&gt;  
-> &nbsp;&nbsp;&nbsp;&nbsp;window.addEventListener('DOMContentLoaded', function(){  
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;document.querySelectorAll
-> ('button')&#91;0&#93;.style.color = 'red';  
-> &nbsp;&nbsp;&nbsp;&nbsp;});  
-> &lt;/script&gt;  
-> <br /> <br /> 
-> _dev/styles/_**Style.css**  
-> ...  
-> .lg-2{  
->     font-size:250%;  
-> }  
-> ...  
-> <br /> <br /> 
-> _dev/scripts/_**Script.js**  
-> ...  
-> function ususedFunc(){  
->     console.log("I have no purpose... ;(")  
-> }  
-> ...  
-> <br /> <br /> 
-> We can see in the above that in Index.html we have a component called 
-> myComponent. In addition to this, we have some things that can be "cleaned". If 
-> you run `webes validate`, webes will parse through your HTML, CSS, and JS files 
-> and find everything not needed and remove it. This doesn't mean it will remove 
-> it from your development files, but it will output messages in the terminal 
-> warning you of where all of these unused code segments are.  
->   
-> In otherwords, webes will go through your components (_myCompontent.webes) 
-> first and will take the HTML and store it wherever &lt;_myComponent&gt;
-> &lt;/_myComponent&gt; appears. Additionally, it will take the css and store it 
-> in Style.css with a prefix of `._myComponent`. Notice in the _myComponent.webes 
-> file that the `button` styling doesn't have that prefix already. That's because 
-> webes will do that for you, in order to create a kind of "scoped" styling 
-> environment for your component. Then it will take the code from the script and 
-> add it to the Script.js file. Once it has done all of this, it will move onto 
-> any other components. Once webes is done with all of the components, it moves 
-> to checking if you have any unused images, or other assets. 
-> </details>
   
 Development should occur in the dev/ directory, with the only exception being 
 the index.html file in the dist/ directory.  
-  
-<br /> <br /> 
 
 ## Installation
 Pre-Requisite: You must be in the directory you would like webes installed to.
@@ -93,7 +23,6 @@ git clone https://github.com/Lucas-Pichette/webes.git
 ```  
 
 [comment]: <> (TODO: Add Installers for Each System)
-<br /> <br /> 
 
 ## How to Use
 To preview all of the possible webes-commands, enter:
@@ -121,10 +50,15 @@ pwd
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ pages/  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ components/  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┗━ app.go  
-<br /> <br /> 
 
 ## Versions
-  
+v0.0.4: Validation is Key!
+* Updated main.go:
+  * Added support for one new command `boilerplate`, added functionality to `validate`, and added an additional warning to `wipe`:
+    * `boilerplate`: Once ran, will ask you for a file name, and then once said file name is provided, webes will generate a new HTML file with SEO-friendly boilerplate code in your PWD.
+    * `validate` (WIP): Validate now finds unused code! Next up: Informating the user of file name, line number, and column number. ("Removing" unused code doesn't occur, it will leave out unused code when "building", which is a different command that will be made soon)
+    * `wipe`: Added warning that informs user that `wipe` command must be ran in project-root directory. In other words, if you see div/ and dist/ when you ls, then you can run wipe successfully.
+
 v0.0.3: Baby Steps
 * Updated lib/colors.go:
   * Changed Color() function name to Style()
@@ -137,7 +71,7 @@ v0.0.3: Baby Steps
     * `wipe`: Deletes the webes project that exists within the PWD.
     * `validate` (WIP): Checks dev/ for unused assets/code-segments.
   
-  
+
 v0.0.2: Webes Foundations  
 * Created lib/ directory: Intended use is to hold Golang files, each file 
     representing some subject of utility functions.
