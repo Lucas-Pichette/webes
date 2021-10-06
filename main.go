@@ -120,10 +120,13 @@ func webes_init() {
 		"		┗━ index.html\n" +
 		"	┗━ dev/\n" +
 		"		┣━ components/\n" +
+		"			┗━ _helloWorld.webes\n" +
 		"		┣━ imgs/\n" +
 		"		┣━ pages/\n" +
 		"		┣━ scripts/\n" +
-		"		┗━ styles/\n"
+		"			┗━ script.js\n" +
+		"		┗━ styles/\n" +
+		"			┗━ style.css\n"
 
 	makeProjectTree()
 

@@ -39,17 +39,21 @@ webes init
   
 The above command will create a directory tree that looks like:  
 pwd  
-&nbsp;&nbsp;&nbsp;&nbsp;┣━ dist/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ imgs/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ scripts/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ styles/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ pages/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┗━ index.html  
-&nbsp;&nbsp;&nbsp;&nbsp;┗━ dev/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ imgs/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ pages/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┣━ components/  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┗━ app.go  
+&emsp;┣━ dist/  
+&emsp;&emsp;┣━ imgs/  
+&emsp;&emsp;┣━ scripts/  
+&emsp;&emsp;┣━ styles/  
+&emsp;&emsp;┣━ pages/  
+&emsp;&emsp;┗━ index.html  
+&emsp;┗━ dev/  
+&emsp;&emsp;┣━ components/  
+&emsp;&emsp;&emsp;┗━ _helloWorld.webes  
+&emsp;&emsp;┣━ imgs/  
+&emsp;&emsp;┣━ pages/  
+&emsp;&emsp;┣━ scripts/  
+&emsp;&emsp;&emsp;┗━ scipt.js  
+&emsp;&emsp;┗━ styles/  
+&emsp;&emsp;&emsp;┗━ style.css  
 
 ## Versions
 v0.0.4: Validation is Key!
